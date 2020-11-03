@@ -31,16 +31,20 @@ public class UnitController {
 
     @GetMapping("/{art}")
     public String getUnit(Model unitModel, @PathVariable int art) {
-        Unit unit = unitService.findByArticle(art);
-        log.info("Got unit: {}", unit.toString());
-        unitModel.addAttribute("unit", unit);
-        return "unit";
+        try {
+            Unit unit = unitService.findByArticle(art);
+            log.info("Got unit: {}", unit.toString());
+            unitModel.addAttribute("unit", unit);
+            return "unit";
+        } catch (IllegalArgumentException e) {
+            return "error";
+        }
     }
 
     @GetMapping("/all")
     public String getAllUnits(Model model, @RequestParam("page") Optional<Integer> pageNumber) {
         int currentPage = pageNumber.orElse(1);
-        Page<Unit> units = unitService.findAllPageable(currentPage - 1, PAGE_SIZE);
+        Page<Unit> units = unitService.findAllPageableInclude("/1", PAGE_SIZE, currentPage - 1);
         model.addAttribute("units", units);
         int totalPages = units.getTotalPages();
         if (totalPages > 0) {
@@ -50,5 +54,10 @@ public class UnitController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
         return "allUnits";
+    }
+
+    @RequestMapping("/error")
+    public String handleError() {
+        return "error";
     }
 }
