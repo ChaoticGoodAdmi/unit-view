@@ -10,6 +10,7 @@ public class Unit {
 
     @Id
     @Column(name = "ART_NR")
+    @Access(value = AccessType.PROPERTY)
     private String article;
 
     @Transient
@@ -66,5 +67,21 @@ public class Unit {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Unit{" +
+                "article='" + article + '\'' +
+                ", id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", groupId=" + groupId +
+                ", notes='" + notes + '\'' +
+                '}';
     }
 }
