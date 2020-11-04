@@ -17,6 +17,9 @@
             <div class="sidebar-header">Просмотр гравировки</div>
             <ul class="list-unstyled components">
                 <li>
+                    <a th:href="@{/api/units/{id}/composition(id=${unit.id})}">Первичная входимость</a>
+                </li>
+                <li>
                     <a th:href="@{/api/units/all}">Назад</a>
                 </li>
             </ul>
@@ -47,19 +50,6 @@
             </div>
         </div>
         <br>
-        <div class="container">
-            <p>
-                <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
-                        aria-expanded="false" aria-controls="collapseExample">
-                    Показать состав
-                </button>
-            </p>
-            <div class="collapse" id="collapseExample">
-                <div class="card card-body">
-
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 </body>

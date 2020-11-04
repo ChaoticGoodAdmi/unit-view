@@ -29,16 +29,20 @@ public class UnitController {
         this.unitService = unitService;
     }
 
-    @GetMapping("/{art}")
-    public String getUnit(Model unitModel, @PathVariable int art) {
-        try {
-            Unit unit = unitService.findByArticle(art);
+    @GetMapping("/{id}")
+    public String getUnit(Model unitModel, @PathVariable int id) {
+            Unit unit = unitService.findById(id);
             log.info("Got unit: {}", unit.toString());
             unitModel.addAttribute("unit", unit);
             return "unit";
-        } catch (IllegalArgumentException e) {
-            return "error";
-        }
+    }
+
+    @GetMapping("/{id}/composition")
+    public String getUnitWithSubUnits(Model model, @PathVariable int id) {
+        Unit unit = unitService.findByIdWithSubUnits(id);
+        log.info("Got unit: {} with {} sub-units", unit.toString(), unit.getSubUnits().size());
+        model.addAttribute("unit", unit);
+        return "unitComposition";
     }
 
     @GetMapping("/all")

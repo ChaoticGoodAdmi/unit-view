@@ -3,6 +3,7 @@ package com.example.unitview.model;
 import com.example.unitview.util.UnitUtils;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "REFDSE")
@@ -27,6 +28,16 @@ public class Unit {
 
     @Column(name = "notes")
     private String notes;
+
+    @Transient
+    private List<Part> subUnits;
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Unit() {
+    }
 
     public String getArticle() {
         return article;
@@ -71,6 +82,14 @@ public class Unit {
 
     public int getId() {
         return id;
+    }
+
+    public List<Part> getSubUnits() {
+        return subUnits;
+    }
+
+    public void setSubUnits(List<Part> subUnits) {
+        this.subUnits = subUnits;
     }
 
     @Override
