@@ -19,7 +19,7 @@ public interface UnitRepository extends JpaRepository<Unit, Integer> {
 
     @Query("SELECT u FROM Unit u " +
             "WHERE u.article LIKE %:pattern% " +
-            "OR u.title LIKE %:pattern% " +
-            "OR u.description LIKE %:pattern%")
+            "OR LOWER(u.title) LIKE %:pattern% " +
+            "OR LOWER(u.description) LIKE %:pattern%")
     Page<Unit> findBySearchPattern(@Param("pattern") String searchPattern, Pageable pageable);
 }

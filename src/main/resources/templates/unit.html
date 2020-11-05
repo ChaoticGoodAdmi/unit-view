@@ -32,7 +32,7 @@
     <br>
     <div id="content">
         <div class="container" th:object="${unit}">
-            <div id="unitCard" class="rounded border border-dark m-10 col-lg-12">
+            <div id="unitCard" class="rounded border border-dark m-10 col-lg-12 w-100">
                 <h2 class="big justify-content-between" id="unitTitle"
                     th:text="${unit.title} != null ? ${unit.title} : ${unit.description}">
                 </h2>

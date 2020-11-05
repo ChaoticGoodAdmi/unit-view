@@ -8,7 +8,21 @@
     <link th:href="@{/css/table.css}" rel="stylesheet" media="screen"/>
 </head>
 <body>
-<div class="table-responsive">
+<div class="input-group w-50 mb-3 mt-3 d-flex ml-auto mr-auto">
+    <input id="searchPattern" type="text" class="form-control rounded" placeholder="Введите поисковый запрос"
+           spellcheck="false"
+           th:value="${#request.getParameter('search')}">
+    <span class="input-group-btn">
+        <button id="searchBtn" class="btn btn-primary ml-3 border" type="submit" onclick="search()">
+            <svg width="1.4em" height="1.4em" viewBox="0 0 16 16" class="bi bi-binoculars" fill="currentColor"
+                 xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                      d="M3 2.5A1.5 1.5 0 0 1 4.5 1h1A1.5 1.5 0 0 1 7 2.5V5h2V2.5A1.5 1.5 0 0 1 10.5 1h1A1.5 1.5 0 0 1 13 2.5v2.382a.5.5 0 0 0 .276.447l.895.447A1.5 1.5 0 0 1 15 7.118V14.5a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 14.5v-3a.5.5 0 0 1 .146-.354l.854-.853V9.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v.793l.854.853A.5.5 0 0 1 7 11.5v3A1.5 1.5 0 0 1 5.5 16h-3A1.5 1.5 0 0 1 1 14.5V7.118a1.5 1.5 0 0 1 .83-1.342l.894-.447A.5.5 0 0 0 3 4.882V2.5zM4.5 2a.5.5 0 0 0-.5.5V3h2v-.5a.5.5 0 0 0-.5-.5h-1zM6 4H4v.882a1.5 1.5 0 0 1-.83 1.342l-.894.447A.5.5 0 0 0 2 7.118V13h4v-1.293l-.854-.853A.5.5 0 0 1 5 10.5v-1A1.5 1.5 0 0 1 6.5 8h3A1.5 1.5 0 0 1 11 9.5v1a.5.5 0 0 1-.146.354l-.854.853V13h4V7.118a.5.5 0 0 0-.276-.447l-.895-.447A1.5 1.5 0 0 1 12 4.882V4h-2v1.5a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V4zm4-1h2v-.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5V3zm4 11h-4v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V14zm-8 0H2v.5a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5V14z"/>
+            </svg>
+        </button>
+   </span>
+</div>
+<div class="table-responsive" th:if="${not #lists.isEmpty(units.content)}">
     <table class="table table-sm table-striped table-hover">
         <thead class="thead-dark">
         <th scope="col">Артикул</th>
@@ -18,7 +32,9 @@
         <th scope="col">Примечание</th>
         </thead>
         <tbody>
-        <tr th:each="unit : ${units.content}" class="clickable-row" th:data-href="@{/api/units/{id}(id = ${unit.id})}">
+        <tr th:each="unit : ${units.content}"
+            th:classappend="${unit.groupId != 6}? clickable-row : ''"
+            th:data-href="@{/api/units/{id}(id = ${unit.id})}">
             <td th:text="${unit.article}"></td>
             <td th:text="${unit.title}"></td>
             <td th:text="${unit.description}"></td>
@@ -28,12 +44,23 @@
         </tbody>
     </table>
 </div>
+<div class="container" th:if="${#lists.isEmpty(units.content)}">
+    <h2 class="text-center">
+        <svg width="1.0625em" height="1em" viewBox="0 0 17 16" class="bi bi-exclamation-triangle" fill="currentColor"
+             xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+                  d="M7.938 2.016a.146.146 0 0 0-.054.057L1.027 13.74a.176.176 0 0 0-.002.183c.016.03.037.05.054.06.015.01.034.017.066.017h13.713a.12.12 0 0 0 .066-.017.163.163 0 0 0 .055-.06.176.176 0 0 0-.003-.183L8.12 2.073a.146.146 0 0 0-.054-.057A.13.13 0 0 0 8.002 2a.13.13 0 0 0-.064.016zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/>
+            <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z"/>
+        </svg>
+        ничего не найдено
+    </h2>
+</div>
 
 <nav aria-label="Pagination" th:if="${units.totalPages gt 0}">
     <ul class="pagination justify-content-center font-weight-medium">
         <li class="page-item" th:classappend="${units.number eq 0} ? 'disabled'">
             <a class="page-link svg-icon"
-               th:href="@{/api/units/all(page=${units.number lt 2 ? 1 : units.number}, search=${#request.getParameter('search')})}"
+               th:href="@{/api/units/all(page=${units.number lt 2 ? 1 : units.number}, search=${param.search})}"
                aria-label="Previous"
                title="Previous Page" rel="tooltip">
                 <span aria-hidden="true" data-feather="chevrons-left" width="20" height="20">
@@ -46,12 +73,14 @@
         </li>
         <li class="page-item" th:classappend="${i eq units.number + 1} ? 'active'"
             th:each="i : ${#numbers.sequence( units.number + 1, units.totalPages > 10 + units.number ? units.number + 10 : units.totalPages, 1)}">
-            <a class="page-link" th:href="@{/api/units/all(page=${i}, search=${#request.getParameter('search')})}" th:text="${i}"
+            <a class="page-link" th:href="@{/api/units/all(page=${i}, search=${#request.getParameter('search')})}"
+               th:text="${i}"
                th:title="${'Page '+ i}"
                rel="tooltip"></a>
         </li>
         <li class="page-item" th:classappend="${units.number + 1 eq units.totalPages} ? 'disabled'">
-            <a class="page-link svg-icon" th:href="@{/api/units/all(page=${units.number + 2}, search=${#request.getParameter('search')})}"
+            <a class="page-link svg-icon"
+               th:href="@{/api/units/all(page=${units.number + 2}, search=${#request.getParameter('search')})}"
                aria-label="Next"
                title="Next Page" rel="tooltip">
                 <span aria-hidden="false" data-feather="chevrons-right" width="20" height="20">
@@ -64,7 +93,8 @@
             </a>
         </li>
         <li class="page-item" th:classappend="${units.number + 10 ge units.totalPages} ? 'disabled'">
-            <a class="page-link svg-icon" th:href="@{/api/units/all(page=${units.number + 11}, search=${#request.getParameter('search')})}"
+            <a class="page-link svg-icon"
+               th:href="@{/api/units/all(page=${units.number + 11}, search=${#request.getParameter('search')})}"
                aria-label="Next"
                title="+10 pages" rel="tooltip">
                 <span aria-hidden="false" data-feather="chevrons-right" width="20" height="20">+10</span>
@@ -74,20 +104,9 @@
 </nav>
 
 </body>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
-<script>
-    jQuery(document).ready(function ($) {
-        $(".clickable-row").click(function () {
-            window.location = $(this).data("href");
-        });
-    });
-</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="/js/table.js"></script>
+<script src="/js/search.js"></script>
 </html>

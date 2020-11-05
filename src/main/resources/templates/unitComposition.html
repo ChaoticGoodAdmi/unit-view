@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" th:replace="unit :: layout(~{::link}, ~{::script}, ~{::section})"
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      th:replace="unit :: layout(~{::link}, ~{::script}, ~{::section})"
       layout:decorator="unit.html" xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
@@ -21,8 +22,8 @@
                     <th scope="col">Артикул</th>
                     <th scope="col">Гравировка</th>
                     <th scope="col">Наименование</th>
-                    <th scope="col">Количество</th>
-                    <th scope="col">Состав</th>
+                    <th class="text-center" scope="col">Количество</th>
+                    <th class="text-center" scope="col">Состав</th>
                     </thead>
                     <tbody>
                     <tr th:each="part : ${unit.subUnits}" class="clickable-row"
@@ -30,11 +31,10 @@
                         <td th:text="${part.unit.article}"></td>
                         <td th:text="${part.unit.title}"></td>
                         <td th:text="${part.unit.description}"></td>
-                        <td th:text="${part.quantity}"></td>
-                        <td><a th:href="@{/api/units/{id}/composition(id = ${part.unit.id})}">
+                        <td class="text-center" th:text="${part.quantity}"></td>
+                        <td class="text-center"><a th:href="@{/api/units/{id}/composition(id = ${part.unit.id})}">
                             <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-folder2-open"
-                                 fill="currentColor"
-                                 xmlns="http://www.w3.org/2000/svg">
+                                 fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
                                       d="M1 3.5A1.5 1.5 0 0 1 2.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0 1 15 5.5v.64c.57.265.94.876.856 1.546l-.64 5.124A2.5 2.5 0 0 1 12.733 15H3.266a2.5 2.5 0 0 1-2.481-2.19l-.64-5.124A1.5 1.5 0 0 1 1 6.14V3.5zM2 6h12v-.5a.5.5 0 0 0-.5-.5H9c-.964 0-1.71-.629-2.174-1.154C6.374 3.334 5.82 3 5.264 3H2.5a.5.5 0 0 0-.5.5V6zm-.367 1a.5.5 0 0 0-.496.562l.64 5.124A1.5 1.5 0 0 0 3.266 14h9.468a1.5 1.5 0 0 0 1.489-1.314l.64-5.124A.5.5 0 0 0 14.367 7H1.633z"/>
                             </svg>

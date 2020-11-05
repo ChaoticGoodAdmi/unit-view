@@ -52,7 +52,7 @@ public class UnitService {
     public Page<Unit> findAllMatching(String searchPattern, int pageSize, int pageNumber) {
         log.info("Service getting all units matching {}", searchPattern);
         PageRequest pageable = PageRequest.of(pageNumber, pageSize, Sort.unsorted());
-        return unitRepo.findBySearchPattern(searchPattern, pageable);
+        return unitRepo.findBySearchPattern(searchPattern.toLowerCase().replace("*", "%"), pageable);
     }
 
     public Unit findByIdWithSubUnits(int id) {
