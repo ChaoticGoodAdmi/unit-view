@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" th:fragment="layout(links, scripts, content)">
 <head>
     <meta charset="UTF-8">
     <title>Просмотр ДСЕ</title>
@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"></script>
+    <th:block th:replace="${links}"/>
     <link th:href="@{/css/sidebar.css}" rel="stylesheet" media="screen"/>
 </head>
 <body>
@@ -20,7 +21,10 @@
                     <a th:href="@{/api/units/{id}/composition(id=${unit.id})}">Первичная входимость</a>
                 </li>
                 <li>
-                    <a th:href="@{/api/units/all}">Назад</a>
+                    <a onclick="goBack()">Назад</a>
+                </li>
+                <li>
+                    <a th:href="@{/api/units/all}">Список гравировок</a>
                 </li>
             </ul>
         </nav>
@@ -50,9 +54,13 @@
             </div>
         </div>
         <br>
+        <section class="content" th:replace="${content}">
+            <p>Layout contents</p>
+        </section>
     </div>
 </div>
 </body>
+<th:block th:replace="${scripts}"/>
 <script>
     function copyToClipboard() {
         const copyText = document.getElementById("art");

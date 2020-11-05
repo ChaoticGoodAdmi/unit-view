@@ -44,9 +44,15 @@ public class UnitService {
     }
 
     public Page<Unit> findAllPageableInclude(String includePattern, int pageSize, int pageNumber) {
-        log.info("Service getting all units (excluding)");
+        log.info("Service getting all units (including {})", includePattern);
         PageRequest pageable = PageRequest.of(pageNumber, pageSize, Sort.unsorted());
         return unitRepo.findAllByArticleContaining(includePattern, pageable);
+    }
+
+    public Page<Unit> findAllMatching(String searchPattern, int pageSize, int pageNumber) {
+        log.info("Service getting all units matching {}", searchPattern);
+        PageRequest pageable = PageRequest.of(pageNumber, pageSize, Sort.unsorted());
+        return unitRepo.findBySearchPattern(searchPattern, pageable);
     }
 
     public Unit findByIdWithSubUnits(int id) {

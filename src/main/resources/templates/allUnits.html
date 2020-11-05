@@ -33,7 +33,7 @@
     <ul class="pagination justify-content-center font-weight-medium">
         <li class="page-item" th:classappend="${units.number eq 0} ? 'disabled'">
             <a class="page-link svg-icon"
-               th:href="@{/api/units/all?page={id}(id=${units.number lt 2 ? 1 : units.number})}"
+               th:href="@{/api/units/all(page=${units.number lt 2 ? 1 : units.number}, search=${#request.getParameter('search')})}"
                aria-label="Previous"
                title="Previous Page" rel="tooltip">
                 <span aria-hidden="true" data-feather="chevrons-left" width="20" height="20">
@@ -46,12 +46,12 @@
         </li>
         <li class="page-item" th:classappend="${i eq units.number + 1} ? 'active'"
             th:each="i : ${#numbers.sequence( units.number + 1, units.totalPages > 10 + units.number ? units.number + 10 : units.totalPages, 1)}">
-            <a class="page-link" th:href="@{/api/units/all?page={id}(id=${i})}" th:text="${i}"
+            <a class="page-link" th:href="@{/api/units/all(page=${i}, search=${#request.getParameter('search')})}" th:text="${i}"
                th:title="${'Page '+ i}"
                rel="tooltip"></a>
         </li>
         <li class="page-item" th:classappend="${units.number + 1 eq units.totalPages} ? 'disabled'">
-            <a class="page-link svg-icon" th:href="@{/api/units/all?page={id}(id=${units.number + 2})}"
+            <a class="page-link svg-icon" th:href="@{/api/units/all(page=${units.number + 2}, search=${#request.getParameter('search')})}"
                aria-label="Next"
                title="Next Page" rel="tooltip">
                 <span aria-hidden="false" data-feather="chevrons-right" width="20" height="20">
@@ -63,8 +63,8 @@
                 </span>
             </a>
         </li>
-        <li class="page-item" th:classappend="${units.number + 10 eq units.totalPages} ? 'disabled'">
-            <a class="page-link svg-icon" th:href="@{/api/units/all?page={id}(id=${units.number + 11})}"
+        <li class="page-item" th:classappend="${units.number + 10 ge units.totalPages} ? 'disabled'">
+            <a class="page-link svg-icon" th:href="@{/api/units/all(page=${units.number + 11}, search=${#request.getParameter('search')})}"
                aria-label="Next"
                title="+10 pages" rel="tooltip">
                 <span aria-hidden="false" data-feather="chevrons-right" width="20" height="20">+10</span>

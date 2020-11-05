@@ -4,3 +4,7 @@ tr.clickable-row { cursor: pointer; }
     background-color: dodgerblue;
     color: white;
 }
+
+.table-hover tbody tr:hover svg {
+    fill: white;
+}

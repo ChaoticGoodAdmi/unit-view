@@ -20,7 +20,8 @@ import java.util.stream.IntStream;
 @Controller
 @RequestMapping("/api/units/")
 public class UnitController {
-    private static final Logger log = LoggerFactory.getLogger( UnitController.class );
+
+    private static final Logger log = LoggerFactory.getLogger(UnitController.class);
 
     private static final int PAGE_SIZE = 20;
     private final UnitService unitService;
@@ -31,10 +32,10 @@ public class UnitController {
 
     @GetMapping("/{id}")
     public String getUnit(Model unitModel, @PathVariable int id) {
-            Unit unit = unitService.findById(id);
-            log.info("Got unit: {}", unit.toString());
-            unitModel.addAttribute("unit", unit);
-            return "unit";
+        Unit unit = unitService.findById(id);
+        log.info("Got unit: {}", unit.toString());
+        unitModel.addAttribute("unit", unit);
+        return "unitPlain";
     }
 
     @GetMapping("/{id}/composition")
@@ -46,11 +47,17 @@ public class UnitController {
     }
 
     @GetMapping("/all")
-    public String getAllUnits(Model model, @RequestParam("page") Optional<Integer> pageNumber) {
+    public String getAllUnits(Model model,
+                              @RequestParam("page") Optional<Integer> pageNumber,
+                              @RequestParam("search") Optional<String> query) {
         int currentPage = pageNumber.orElse(1);
-        Page<Unit> units = unitService.findAllPageableInclude("/1", PAGE_SIZE, currentPage - 1);
+        String searchPattern = query.orElse(null);
+        Page<Unit> units = searchPattern == null ?
+                unitService.findAllPageableInclude("/1", PAGE_SIZE, currentPage - 1) :
+                unitService.findAllMatching(searchPattern, PAGE_SIZE, currentPage - 1);
         model.addAttribute("units", units);
         int totalPages = units.getTotalPages();
+        log.info("Got {} units from service, separated on {} pages", units.getTotalElements(), totalPages);
         if (totalPages > 0) {
             List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
                     .boxed()
