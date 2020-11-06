@@ -17,11 +17,13 @@ public class JdbcPartRepository implements PartRepository {
     private static final Logger log = LoggerFactory.getLogger(JdbcPartRepository.class);
 
     private final JdbcTemplate template;
+    private final UnitGroupRepository unitGroupRepo;
     private RowMapper<Part> rowMapper;
 
     @Autowired
-    public JdbcPartRepository(JdbcTemplate template) {
+    public JdbcPartRepository(JdbcTemplate template, UnitGroupRepository unitGroupRepo) {
         this.template = template;
+        this.unitGroupRepo = unitGroupRepo;
         createRowMapper();
     }
 
@@ -44,7 +46,7 @@ public class JdbcPartRepository implements PartRepository {
             unit.setArticle(resultSet.getString("art_nr"));
             unit.setTitle(resultSet.getString("art_bez"));
             unit.setDescription(resultSet.getString("art_bez2"));
-            unit.setGroupId(resultSet.getInt("idgrdse"));
+            unit.setGroup(unitGroupRepo.getOne(resultSet.getInt("idgrdse")));
             unit.setNotes(resultSet.getString("notes"));
             return new Part(unit, resultSet.getInt("quantdse"));
         };

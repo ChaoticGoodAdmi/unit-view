@@ -33,12 +33,12 @@
         </thead>
         <tbody>
         <tr th:each="unit : ${units.content}"
-            th:classappend="${unit.groupId != 6}? clickable-row : ''"
+            th:classappend="${unit.group.id != 6}? clickable-row : ''"
             th:data-href="@{/api/units/{id}(id = ${unit.id})}">
             <td th:text="${unit.article}"></td>
             <td th:text="${unit.title}"></td>
             <td th:text="${unit.description}"></td>
-            <td th:text="${unit.groupId}"></td>
+            <td th:text="${unit.group.title}"></td>
             <td th:text="${unit.notes}"></td>
         </tr>
         </tbody>

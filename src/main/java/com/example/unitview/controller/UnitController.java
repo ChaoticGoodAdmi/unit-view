@@ -53,7 +53,7 @@ public class UnitController {
         int currentPage = pageNumber.orElse(1);
         String searchPattern = query.orElse(null);
         Page<Unit> units = searchPattern == null ?
-                unitService.findAllPageableInclude("/1", PAGE_SIZE, currentPage - 1) :
+                unitService.findAllPageable(PAGE_SIZE, currentPage - 1) :
                 unitService.findAllMatching(searchPattern, PAGE_SIZE, currentPage - 1);
         model.addAttribute("units", units);
         int totalPages = units.getTotalPages();

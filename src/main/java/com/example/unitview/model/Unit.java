@@ -32,11 +32,15 @@ public class Unit {
     @Transient
     private List<Part> subUnits;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idgrdse")
+    private UnitGroup group;
 
     public Unit() {
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getArticle() {
@@ -64,12 +68,12 @@ public class Unit {
         this.description = description;
     }
 
-    public int getGroupId() {
-        return groupId;
+    public UnitGroup getGroup() {
+        return group;
     }
 
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
+    public void setGroup(UnitGroup group) {
+        this.group = group;
     }
 
     public String getNotes() {
@@ -99,7 +103,7 @@ public class Unit {
                 ", id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", groupId=" + groupId +
+                ", group=" + group + '\'' +
                 ", notes='" + notes + '\'' +
                 '}';
     }
