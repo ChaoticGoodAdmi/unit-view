@@ -7,6 +7,7 @@ import com.example.unitview.repo.UnitRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,16 +29,18 @@ public class UnitService {
         this.partRepo = partRepo;
     }
 
+    @Cacheable("units")
     public Unit findById(int id) {
         return findByArticle(id + "/1");
     }
 
+    @Cacheable("units")
     public Unit findByArticle(String article) {
         log.info("Service is loading unit by article {}", article);
         return unitRepo.findByArticle(article).orElseThrow(() -> new IllegalArgumentException("Unit " + article + " not found in repo"));
     }
 
-    public Page<Unit> findAllPageable(int pageNumber, int pageSize) {
+    public Page<Unit> findAllPageable(int pageSize, int pageNumber) {
         log.info("Service getting all units (paging)");
         PageRequest pageable = PageRequest.of(pageNumber, pageSize, Sort.unsorted());
         return unitRepo.findAll(pageable);
