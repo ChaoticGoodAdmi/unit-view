@@ -2,8 +2,6 @@ package com.example.unitview.repo;
 
 import com.example.unitview.model.Part;
 import com.example.unitview.model.Unit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,8 +11,6 @@ import java.util.List;
 
 @Repository
 public class JdbcPartRepository implements PartRepository {
-
-    private static final Logger log = LoggerFactory.getLogger(JdbcPartRepository.class);
 
     private final JdbcTemplate template;
     private final UnitGroupRepository unitGroupRepo;
@@ -37,7 +33,6 @@ public class JdbcPartRepository implements PartRepository {
                         "WHERE cd.parent_art_nr = ?" +
                         "ORDER BY cd.art_nr",
                 rowMapper, art);
-        log.info("Repository loaded {} parts", query.size());
         return query;
     }
 
