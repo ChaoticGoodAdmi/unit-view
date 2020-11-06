@@ -34,7 +34,8 @@ public class JdbcPartRepository implements PartRepository {
                         "FROM compositdse cd " +
                         "INNER JOIN refdse r " +
                         "ON r.art_nr = cd.art_nr " +
-                        "WHERE cd.parent_art_nr = ?",
+                        "WHERE cd.parent_art_nr = ?" +
+                        "ORDER BY cd.art_nr",
                 rowMapper, art);
         log.info("Repository loaded {} parts", query.size());
         return query;

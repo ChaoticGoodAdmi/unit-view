@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -65,6 +66,16 @@ public class UnitController {
             model.addAttribute("pageNumbers", pageNumbers);
         }
         return "allUnits";
+    }
+
+    @GetMapping("/{id}/exploding")
+    public String getComposition(Model model, @PathVariable("id") int id) {
+        Unit unit = unitService.findByIdWithSubUnits(id);
+        model.addAttribute("unit", unit);
+        Map<Unit, Integer> explodedComposition = unitService.explodeUnit(unit);
+        log.info("Decomposition finished with {} units", explodedComposition.values().size());
+        model.addAttribute("explodedComp", explodedComposition);
+        return "unitExploding";
     }
 
     @RequestMapping("/error")

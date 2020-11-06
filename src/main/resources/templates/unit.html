@@ -12,6 +12,15 @@
     <link th:href="@{/css/sidebar.css}" rel="stylesheet" media="screen"/>
 </head>
 <body>
+<button onclick="topFunction()" id="scrollTopBtn" title="Go to top">
+    <svg width="9em" height="1.5em" viewBox="0 0 16 16" class="bi bi-arrow-up-square" fill="currentColor"
+         xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd"
+              d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+        <path fill-rule="evenodd"
+              d="M8 12a.5.5 0 0 0 .5-.5V5.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 5.707V11.5a.5.5 0 0 0 .5.5z"/>
+    </svg>
+</button>
 <div class="wrapper">
     <div class="sidebar-sticky">
         <nav id="sidebar">
@@ -21,10 +30,14 @@
                     <a th:href="@{/api/units/{id}/composition(id=${unit.id})}">Первичная входимость</a>
                 </li>
                 <li>
+                    <a th:href="@{/api/units/{id}/exploding(id=${unit.id})}">Разузлование</a>
+                </li>
+                <hr>
+                <li>
                     <a onclick="goBack()">Назад</a>
                 </li>
                 <li>
-                    <a th:href="@{/api/units/all}">Список гравировок</a>
+                    <a th:href="@{/api/units/all}">К списку гравировок</a>
                 </li>
             </ul>
         </nav>
@@ -38,6 +51,7 @@
                 </h2>
                 <span class="text-white pb-10 col-sm-3" id="unitDescription" th:if="${unit.title != null}"
                       th:text="*{description}"></span>
+                <span class="text-info col-sm-3" th:text="${unit.group.title}"></span>
             </div>
             <br>
             <div class="container copy-btn mt-10">Артикул: <span id="art" th:text="*{article}"></span>
@@ -61,6 +75,7 @@
 </div>
 </body>
 <th:block th:replace="${scripts}"/>
+<script src="/js/scroll.js"></script>
 <script>
     function copyToClipboard() {
         const copyText = document.getElementById("art");

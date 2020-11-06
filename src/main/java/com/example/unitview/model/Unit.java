@@ -3,7 +3,9 @@ package com.example.unitview.model;
 import com.example.unitview.util.UnitUtils;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "REFDSE")
@@ -22,9 +24,6 @@ public class Unit {
 
     @Column(name = "ART_BEZ2")
     private String description;
-
-    @Column(name = "IDGRDSE")
-    private int groupId;
 
     @Column(name = "notes")
     private String notes;
@@ -89,11 +88,37 @@ public class Unit {
     }
 
     public List<Part> getSubUnits() {
-        return subUnits;
+        return subUnits == null ? new ArrayList<>() : subUnits;
     }
 
     public void setSubUnits(List<Part> subUnits) {
         this.subUnits = subUnits;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Unit unit = (Unit) o;
+
+        if (id != unit.id) return false;
+        if (!article.equals(unit.article)) return false;
+        if (!Objects.equals(title, unit.title)) return false;
+        if (!Objects.equals(description, unit.description)) return false;
+        if (!Objects.equals(notes, unit.notes)) return false;
+        return group.equals(unit.group);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = article.hashCode();
+        result = 31 * result + id;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (notes != null ? notes.hashCode() : 0);
+        result = 31 * result + group.hashCode();
+        return result;
     }
 
     @Override

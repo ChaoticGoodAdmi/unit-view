@@ -10,8 +10,8 @@
 </head>
 <body>
 <section>
-    <div class="container" th:if="${not #lists.isEmpty(unit.subUnits)}"><h3 class="container ">
-        Состав изделия:
+    <div th:if="not ${explodedComp.isEmpty()}"><h3 class="container ">
+        Разузлованный состав изделия:
         <span th:text="${unit.title} != null ? ${unit.title} : ${unit.description}"></span>
         <span th:if="${unit.title != null}" th:text="${unit.description}"></span>
     </h3>
@@ -27,14 +27,14 @@
                     <th class="text-center" scope="col">Состав</th>
                     </thead>
                     <tbody>
-                    <tr th:each="part : ${unit.subUnits}" th:classappend="${part.unit.group.id != 6}? clickable-row : ''"
-                        th:data-href="@{/api/units/{id}(id = ${part.unit.id})}">
-                        <td th:text="${part.unit.article}"></td>
-                        <td th:text="${part.unit.title}"></td>
-                        <td th:text="${part.unit.description}"></td>
-                        <td th:text="${part.unit.group.title}"></td>
-                        <td class="text-center" th:text="${part.quantity}"></td>
-                        <td class="text-center"><a th:if="${part.unit.group.id != 6}" th:href="@{/api/units/{id}/composition(id = ${part.unit.id})}">
+                    <tr th:each="unitEntry : ${explodedComp}" th:classappend="${unitEntry.key.group.id != 6}? clickable-row : ''"
+                        th:data-href="@{/api/units/{id}(id = ${unitEntry.key.id})}">
+                        <td th:text="${unitEntry.key.article}"></td>
+                        <td th:text="${unitEntry.key.title}"></td>
+                        <td th:text="${unitEntry.key.description}"></td>
+                        <td th:text="${unitEntry.key.group.title}"></td>
+                        <td class="text-center" th:text="${unitEntry.value}"></td>
+                        <td class="text-center"><a th:if="${unitEntry.key.group.id != 6}" th:href="@{/api/units/{id}/exploding(id = ${unitEntry.key.id})}">
                             <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-folder2-open"
                                  fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    <div class="container" th:unless="${not #lists.isEmpty(unit.subUnits)}">
+    <div th:if="${explodedComp.isEmpty()}">
         <h2>Изделие <span th:text="${unit.title} != null ? ${unit.title} : ${unit.description}"></span> не имеет состава
         </h2>
     </div>

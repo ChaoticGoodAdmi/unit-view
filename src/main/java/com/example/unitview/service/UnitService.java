@@ -12,8 +12,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UnitService {
@@ -31,27 +34,37 @@ public class UnitService {
 
     @Cacheable("units")
     public Unit findById(int id) {
-        return findByArticle(id + "/1");
+        return findByArticle(String.valueOf(id));
     }
 
+    @Transactional
     @Cacheable("units")
-    public Unit findByArticle(String article) {
+    public Unit findByArticle(String article) throws IllegalArgumentException {
         log.info("Service is loading unit by article {}", article);
-        return unitRepo.findByArticle(article).orElseThrow(() -> new IllegalArgumentException("Unit " + article + " not found in repo"));
+        Unit unit;
+        try {
+            unit = unitRepo.findByArticle(article + "/1").orElseThrow(IllegalArgumentException::new);
+        } catch (IllegalArgumentException e) {
+            unit = unitRepo.findByArticle(article + "/5").orElseThrow(IllegalArgumentException::new);
+        }
+        return unit;
     }
 
+    @Cacheable("unitPages")
     public Page<Unit> findAllPageable(int pageSize, int pageNumber) {
         log.info("Service getting all units (paging)");
         PageRequest pageable = PageRequest.of(pageNumber, pageSize, Sort.unsorted());
         return unitRepo.findAll(pageable);
     }
 
+    @Cacheable("unitSearch")
     public Page<Unit> findAllMatching(String searchPattern, int pageSize, int pageNumber) {
         log.info("Service getting all units matching {}", searchPattern);
         PageRequest pageable = PageRequest.of(pageNumber, pageSize, Sort.by("article"));
         return unitRepo.findBySearchPattern(searchPattern.toLowerCase().replace("*", "%"), pageable);
     }
 
+    @Cacheable("subUnits")
     public Unit findByIdWithSubUnits(int id) {
         log.info("Service is loading unit with sub-units by article {}", id);
         Unit unit = findById(id);
@@ -59,5 +72,34 @@ public class UnitService {
         List<Part> subUnits = partRepo.findSubUnits(unit.getArticle());
         unit.setSubUnits(subUnits);
         return unit;
+    }
+
+    public Unit findByUnitWithSubUnits(Unit unit) {
+        return findByIdWithSubUnits(unit.getId());
+    }
+
+    @Transactional
+    @Cacheable("explodedUnit")
+    public Map<Unit, Integer> explodeUnit(Unit original) {
+        Map<Unit, Integer> exploded = new HashMap<>();
+        final int DEFAULT_ORIGIN_QUANTITY = 1;
+        explodeUnitRecursively(original, DEFAULT_ORIGIN_QUANTITY, DEFAULT_ORIGIN_QUANTITY, exploded);
+        return exploded;
+    }
+
+    private void explodeUnitRecursively(Unit unitToExplode, int quantity, int parentQuantity, Map<Unit, Integer> exploded) {
+        List<Part> subUnits = unitToExplode.getSubUnits();
+        if (subUnits.size() > 0) {
+            for (Part part : subUnits) {
+                Unit childUnit = part.getUnit();
+                int childQuantity = part.getQuantity();
+                explodeUnitRecursively(findByUnitWithSubUnits(childUnit), childQuantity * parentQuantity, quantity, exploded);
+            }
+        }
+        putOrAdd(unitToExplode, quantity * parentQuantity, exploded);
+    }
+
+    private void putOrAdd(Unit unit, int quantity, Map<Unit, Integer> unitMap) {
+        unitMap.put(unit, unitMap.containsKey(unit) ? quantity + unitMap.get(unit) : quantity);
     }
 }
