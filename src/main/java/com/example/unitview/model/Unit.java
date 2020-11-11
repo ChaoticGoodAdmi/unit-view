@@ -35,6 +35,9 @@ public class Unit {
     @JoinColumn(name = "idgrdse")
     private UnitGroup group;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "unit")
+    private List<TechProcess> techProcesses;
+
     public Unit() {
     }
 
@@ -93,6 +96,14 @@ public class Unit {
 
     public void setSubUnits(List<Part> subUnits) {
         this.subUnits = subUnits;
+    }
+
+    public List<TechProcess> getTechProcesses() {
+        return techProcesses;
+    }
+
+    public void setTechProcesses(List<TechProcess> techProcesses) {
+        this.techProcesses = techProcesses;
     }
 
     @Override

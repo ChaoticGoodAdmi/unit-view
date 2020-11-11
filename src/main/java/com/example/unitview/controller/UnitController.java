@@ -1,6 +1,8 @@
 package com.example.unitview.controller;
 
+import com.example.unitview.model.TechProcess;
 import com.example.unitview.model.Unit;
+import com.example.unitview.service.TechProcService;
 import com.example.unitview.service.UnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +27,13 @@ public class UnitController {
     private static final Logger log = LoggerFactory.getLogger(UnitController.class);
 
     private static final int PAGE_SIZE = 20;
-    private final UnitService unitService;
 
-    public UnitController(UnitService unitService) {
+    private final UnitService unitService;
+    private final TechProcService tpService;
+
+    public UnitController(UnitService unitService, TechProcService tpService) {
         this.unitService = unitService;
+        this.tpService = tpService;
     }
 
     @GetMapping("/{id}")
@@ -51,6 +56,7 @@ public class UnitController {
     public String getAllUnits(Model model,
                               @RequestParam("page") Optional<Integer> pageNumber,
                               @RequestParam("search") Optional<String> query) {
+        //todo open unit page if search count is 1
         int currentPage = pageNumber.orElse(1);
         String searchPattern = query.orElse(null);
         Page<Unit> units = searchPattern == null ?
@@ -76,6 +82,14 @@ public class UnitController {
         log.info("Decomposition finished with {} units", explodedComposition.values().size());
         model.addAttribute("explodedComp", explodedComposition);
         return "unitExploding";
+    }
+
+    @GetMapping("/{id}/tp")
+    public String getTechProcess(Model model, @PathVariable("id") int id) {
+        Unit unit = unitService.findByIdWithTp(id);
+        unit.getTechProcesses().sort(TechProcess::compareTo);
+        model.addAttribute("unit", unit);
+        return "unitTechProc";
     }
 
     @RequestMapping("/error")

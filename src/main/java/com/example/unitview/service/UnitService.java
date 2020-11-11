@@ -78,6 +78,12 @@ public class UnitService {
         return findByIdWithSubUnits(unit.getId());
     }
 
+    @Cacheable("unitWithTp")
+    public Unit findByIdWithTp(int id) {
+        return unitRepo.findByArticleWithTp(id + "/1")
+                .orElseThrow(() -> new IllegalArgumentException("Unit " + id + " not found in repo"));
+    }
+
     @Transactional
     @Cacheable("explodedUnit")
     public Map<Unit, Integer> explodeUnit(Unit original) {

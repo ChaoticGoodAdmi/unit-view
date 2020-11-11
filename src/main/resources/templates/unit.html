@@ -28,6 +28,10 @@
             <div class="sidebar-header">Просмотр гравировки</div>
             <ul class="list-unstyled components">
                 <li>
+                    <a th:href="@{/api/units/{id}/tp(id=${unit.id})}">Список ТП</a>
+                </li>
+                <hr>
+                <li>
                     <a th:href="@{/api/units/{id}/composition(id=${unit.id})}">Первичная входимость</a>
                 </li>
                 <li>

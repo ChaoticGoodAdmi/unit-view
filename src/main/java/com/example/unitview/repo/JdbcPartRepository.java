@@ -25,15 +25,14 @@ public class JdbcPartRepository implements PartRepository {
 
     @Override
     public List<Part> findSubUnits(String art) {
-        List<Part> query = template.query(
-                "SELECT cd.art_nr, cd.quantdse, r.* " +
+        return template.query(
+                "SELECT DISTINCT cd.art_nr, cd.quantdse, r.* " +
                         "FROM compositdse cd " +
                         "INNER JOIN refdse r " +
                         "ON r.art_nr = cd.art_nr " +
                         "WHERE cd.parent_art_nr = ?" +
                         "ORDER BY cd.art_nr",
                 rowMapper, art);
-        return query;
     }
 
     private void createRowMapper() {
