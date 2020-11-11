@@ -37,7 +37,7 @@
                     </thead>
                     <tbody th:each="operation : ${techProc.operations}">
                     <tr th:if="${operation.active == true}">
-                        <td th:text="${operation.deptId}"></td>
+                        <td th:text="${operation.department.code}"></td>
                         <td th:text="${operation.localDept}"></td>
                         <td th:text="${operation.operId}"></td>
                         <td th:text="${operation.variation}"></td>

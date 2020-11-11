@@ -14,8 +14,9 @@ public class TechOperation {
     @JoinColumn(name = "tp_id")
     private TechProcess techProcess;
 
-    @Column(name = "dept_id")
-    private int deptId;
+    @OneToOne
+    @JoinColumn(name = "dept_id")
+    private Department department;
 
     @Column(name = "oper_id")
     private int operId;
@@ -48,12 +49,12 @@ public class TechOperation {
         this.techProcess = techProcess;
     }
 
-    public int getDeptId() {
-        return deptId;
+    public Department getDepartment() {
+        return department;
     }
 
-    public void setDeptId(int deptId) {
-        this.deptId = deptId;
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     public int getOperId() {
@@ -96,7 +97,6 @@ public class TechOperation {
         TechOperation that = (TechOperation) o;
 
         if (id != that.id) return false;
-        if (deptId != that.deptId) return false;
         if (operId != that.operId) return false;
         if (variation != that.variation) return false;
         if (active != that.active) return false;
@@ -106,7 +106,6 @@ public class TechOperation {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + deptId;
         result = 31 * result + operId;
         result = 31 * result + variation;
         result = 31 * result + localDept.hashCode();
@@ -118,7 +117,6 @@ public class TechOperation {
     public String toString() {
         return "TechOperation{" +
                 "id=" + id +
-                ", deptId=" + deptId +
                 ", operId=" + operId +
                 ", variation=" + variation +
                 ", localDept='" + localDept + '\'' +
