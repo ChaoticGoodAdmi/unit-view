@@ -2,7 +2,6 @@ package com.example.unitview.controller;
 
 import com.example.unitview.model.TechProcess;
 import com.example.unitview.model.Unit;
-import com.example.unitview.service.TechProcService;
 import com.example.unitview.service.UnitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,7 @@ public class UnitController {
 
     private final UnitService unitService;
 
-    public UnitController(UnitService unitService, TechProcService tpService) {
+    public UnitController(UnitService unitService) {
         this.unitService = unitService;
     }
 
@@ -55,7 +54,6 @@ public class UnitController {
     public String getAllUnits(Model model,
                               @RequestParam("page") Optional<Integer> pageNumber,
                               @RequestParam("search") Optional<String> query) {
-        //todo open unit page if search count is 1
         int currentPage = pageNumber.orElse(1);
         String searchPattern = query.orElse(null);
         Page<Unit> units = searchPattern == null ?

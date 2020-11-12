@@ -47,33 +47,34 @@
     <div id="content">
         <div class="container" th:object="${unit}">
             <div id="unitCard" class="rounded border border-dark m-10 col-lg-12 w-100">
-                <h2 class="big justify-content-between" id="unitTitle"
-                    th:text="${unit.title} != null ? ${unit.title} : ${unit.description}">
-                </h2>
-                <span class="text-white pb-10 col-sm-3" id="unitDescription" th:if="${unit.title != null}"
-                      th:text="*{description}"></span>
-                <span class="text-info col-sm-3" th:text="${unit.group.title}"></span>
+                <div class="justify-content-between">
+                    <h2 class="big" id="unitTitle"
+                        th:text="${unit.title} != null ? ${unit.title} : ${unit.description}">
+                    </h2>
+                    <span class="text-white pb-10 col-sm-3" id="unitDescription" th:if="${unit.title != null}"
+                          th:text="*{description}"></span>
+                    <span class="text-info col-sm-3 mr-0 text-nowrap" th:text="${unit.group.title}"></span>
+                </div>
+                <div class="container copy-btn mt-lg-1 mb-10 pt-1 pb-1 text-white bg-info rounded">
+                    <strong>Артикул:</strong> <span id="art" th:text="*{article}"></span>
+                    <button type="button" class="btn btn-sm"
+                            onclick="copyToClipboard()">
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-files" fill="currentColor"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                  d="M4 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4z"/>
+                            <path d="M6 0h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1H4a2 2 0 0 1 2-2z"/>
+                        </svg>
+                    </button>
+                    <span id="copied-msg"></span>
+                </div>
+                <div class="container text-white bg-info rounded mt-lg-1 pt-1 pb-1">
+                    <span><strong>Ответственный участок:</strong> </span>
+                    <span class="" th:text="${responsibleDept}"></span>
+                </div>
             </div>
             <br>
-            <div class="container copy-btn mt-10"><strong>Артикул:</strong> <span id="art" th:text="*{article}"></span>
-                <button type="button" class="btn btn-info"
-                        onclick="copyToClipboard()">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-files" fill="currentColor"
-                         xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd"
-                              d="M4 2h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4z"/>
-                        <path d="M6 0h7a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1H4a2 2 0 0 1 2-2z"/>
-                    </svg>
-                </button>
-                <span id="copied-msg"></span>
-            </div>
-            <br>
-            <div class="container">
-                <span><strong>Ответственный участок:</strong> </span>
-                <span class="" th:text="${responsibleDept}"></span>
-            </div>
         </div>
-        <br>
         <section class="content" th:replace="${content}">
             <p>Layout contents</p>
         </section>
@@ -99,7 +100,7 @@
     }
 
     function showCopiedMsg() {
-        document.getElementById("copied-msg").innerHTML = "<span class='text-muted'>Скопировано!</span>"
+        document.getElementById("copied-msg").innerHTML = "<span class='text-light'>Скопировано!</span>"
         setTimeout(() => {
             document.getElementById("copied-msg").innerHTML = "";
         }, 2000);

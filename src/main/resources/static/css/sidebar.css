@@ -112,6 +112,7 @@ body, html, #sidebar {
 }
 
 #unitCard {
+    max-width: max-content;
     background-color: black;
     padding-bottom: 10px;
 }
