@@ -5,3 +5,7 @@
 .sorting {
     font-style: italic;
 }
+
+thead {
+    text-align: center;
+}

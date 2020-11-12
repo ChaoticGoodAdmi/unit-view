@@ -18,11 +18,16 @@ public class TechOperation {
     @JoinColumn(name = "dept_id")
     private Department department;
 
-    @Column(name = "oper_id")
-    private int operId;
+    @OneToOne
+    @JoinColumn(name = "oper_id")
+    private OperationType type;
 
-    @Column(name = "nvar")
-    private int variation;
+    @Column(name = "code")
+    private String code;
+
+    @OneToOne
+    @JoinColumn(name = "nvar")
+    private OperationVariation variation;
 
     @Column(name = "local_dept")
     private String localDept;
@@ -57,19 +62,27 @@ public class TechOperation {
         this.department = department;
     }
 
-    public int getOperId() {
-        return operId;
+    public OperationType getType() {
+        return type;
     }
 
-    public void setOperId(int operId) {
-        this.operId = operId;
+    public void setType(OperationType type) {
+        this.type = type;
     }
 
-    public int getVariation() {
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public OperationVariation getVariation() {
         return variation;
     }
 
-    public void setVariation(int variation) {
+    public void setVariation(OperationVariation variation) {
         this.variation = variation;
     }
 
@@ -97,18 +110,21 @@ public class TechOperation {
         TechOperation that = (TechOperation) o;
 
         if (id != that.id) return false;
-        if (operId != that.operId) return false;
-        if (variation != that.variation) return false;
         if (active != that.active) return false;
-        return localDept.equals(that.localDept);
+        if (!techProcess.equals(that.techProcess)) return false;
+        if (!type.equals(that.type)) return false;
+        return code.equals(that.code);
     }
 
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + operId;
-        result = 31 * result + variation;
-        result = 31 * result + localDept.hashCode();
+        result = 31 * result + techProcess.hashCode();
+        result = 31 * result + (department != null ? department.hashCode() : 0);
+        result = 31 * result + type.hashCode();
+        result = 31 * result + code.hashCode();
+        result = 31 * result + (variation != null ? variation.hashCode() : 0);
+        result = 31 * result + (localDept != null ? localDept.hashCode() : 0);
         result = 31 * result + (active ? 1 : 0);
         return result;
     }
@@ -117,7 +133,10 @@ public class TechOperation {
     public String toString() {
         return "TechOperation{" +
                 "id=" + id +
-                ", operId=" + operId +
+                ", techProcess=" + techProcess +
+                ", department=" + department +
+                ", type=" + type +
+                ", code='" + code + '\'' +
                 ", variation=" + variation +
                 ", localDept='" + localDept + '\'' +
                 ", active=" + active +

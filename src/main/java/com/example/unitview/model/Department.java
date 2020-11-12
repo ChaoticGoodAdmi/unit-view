@@ -80,6 +80,24 @@ public class Department {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Department that = (Department) o;
+
+        if (id != that.id) return false;
+        return code.equals(that.code);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + code.hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Department{" +
                 "id=" + id +

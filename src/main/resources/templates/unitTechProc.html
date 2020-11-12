@@ -29,18 +29,20 @@
             <div th:each="techProc : ${unit.techProcesses}">
                 <table class="table table-sm table-hover tp-details d-none"
                        th:id="tp + ${techProc.id}">
-                    <thead>
+                    <thead class="thead-dark ali">
                     <th>Цех</th>
                     <th>Участок</th>
+                    <th>№ операции</th>
                     <th>Операция</th>
                     <th>Вариант</th>
                     </thead>
                     <tbody th:each="operation : ${techProc.operations}">
                     <tr th:if="${operation.active == true}">
-                        <td th:text="${operation.department.code}"></td>
-                        <td th:text="${operation.localDept}"></td>
-                        <td th:text="${operation.operId}"></td>
-                        <td th:text="${operation.variation}"></td>
+                        <td class="pl-lg-4 pr-lg-4" th:text="${operation.department.code}"></td>
+                        <td class="pl-lg-4 pr-lg-4" th:text="${operation.localDept}"></td>
+                        <td class="pl-lg-4 pr-lg-4" th:text="${operation.code}"></td>
+                        <td class="pl-lg-4 pr-lg-4" th:text="${operation.type.title}"></td>
+                        <td class="pl-lg-4 pr-lg-4" th:text="${operation.variation.title}"></td>
                     </tr>
                     </tbody>
                 </table>

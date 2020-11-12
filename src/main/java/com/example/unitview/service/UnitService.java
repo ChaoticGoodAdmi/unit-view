@@ -1,9 +1,12 @@
 package com.example.unitview.service;
 
 import com.example.unitview.model.Part;
+import com.example.unitview.model.TechOperation;
+import com.example.unitview.model.TechProcess;
 import com.example.unitview.model.Unit;
 import com.example.unitview.repo.PartRepository;
 import com.example.unitview.repo.UnitRepository;
+import com.example.unitview.util.TechProcUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,5 +110,27 @@ public class UnitService {
 
     private void putOrAdd(Unit unit, int quantity, Map<Unit, Integer> unitMap) {
         unitMap.put(unit, unitMap.containsKey(unit) ? quantity + unitMap.get(unit) : quantity);
+    }
+
+    public String getResponsibleDepartment(Unit unit) {
+        List<TechProcess> techProcesses = unit.getTechProcesses();
+        try {
+            TechProcess sortingTp = TechProcUtils.getSortingTechProcess(techProcesses);
+            TechOperation lastSortingOperation = TechProcUtils.getLastTechOperation(sortingTp, null);
+            TechProcess activeTp = TechProcUtils.getActiveTechProcess(techProcesses);
+            TechOperation lastActiveOperation =
+                    TechProcUtils.getLastTechOperation(activeTp, lastSortingOperation.getDepartment());
+            StringBuilder responsibleDept = new StringBuilder();
+            responsibleDept.append(lastSortingOperation.getDepartment().getCode());
+            responsibleDept.append("-");
+            if (lastActiveOperation.getLocalDept() != null) {
+                responsibleDept.append(lastActiveOperation.getLocalDept());
+            } else {
+                responsibleDept.append(0);
+            }
+            return responsibleDept.toString();
+        } catch (NullPointerException npe) {
+            return "< не определено >";
+        }
     }
 }

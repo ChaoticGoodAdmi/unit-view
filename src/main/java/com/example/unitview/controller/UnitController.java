@@ -29,19 +29,18 @@ public class UnitController {
     private static final int PAGE_SIZE = 20;
 
     private final UnitService unitService;
-    private final TechProcService tpService;
 
     public UnitController(UnitService unitService, TechProcService tpService) {
         this.unitService = unitService;
-        this.tpService = tpService;
     }
 
     @GetMapping("/{id}")
     public String getUnit(Model unitModel, @PathVariable int id) {
-        Unit unit = unitService.findById(id);
-        log.info("Got unit: {}", unit.toString());
+        Unit unit = unitService.findByIdWithTp(id);
+        unit.getTechProcesses().sort(TechProcess::compareTo);
         unitModel.addAttribute("unit", unit);
-        return "unitPlain";
+        unitModel.addAttribute("responsibleDept", unitService.getResponsibleDepartment(unit));
+        return "unitTechProc";
     }
 
     @GetMapping("/{id}/composition")
@@ -82,14 +81,6 @@ public class UnitController {
         log.info("Decomposition finished with {} units", explodedComposition.values().size());
         model.addAttribute("explodedComp", explodedComposition);
         return "unitExploding";
-    }
-
-    @GetMapping("/{id}/tp")
-    public String getTechProcess(Model model, @PathVariable("id") int id) {
-        Unit unit = unitService.findByIdWithTp(id);
-        unit.getTechProcesses().sort(TechProcess::compareTo);
-        model.addAttribute("unit", unit);
-        return "unitTechProc";
     }
 
     @RequestMapping("/error")

@@ -33,6 +33,7 @@ public class TechProcess implements Comparable<TechProcess> {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "techProcess")
     @Fetch(value = FetchMode.JOIN)
+    @OrderBy("code ASC")
     private List<TechOperation> operations;
 
     public TechProcess() {
