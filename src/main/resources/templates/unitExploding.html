@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    <div th:if="${explodedComp.isEmpty()}">
+    <div class="alert alert-warning" role="alert" th:if="${explodedComp.isEmpty()}">
         <h2>Изделие <span th:text="${unit.title} != null ? ${unit.title} : ${unit.description}"></span> не имеет состава
         </h2>
     </div>

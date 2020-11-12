@@ -47,9 +47,12 @@
             </div>
         </div>
     </div>
-    <div class="container" th:unless="${not #lists.isEmpty(unit.subUnits)}">
-        <h2>Изделие <span th:text="${unit.title} != null ? ${unit.title} : ${unit.description}"></span> не имеет состава
-        </h2>
+    <div class="container">
+        <div class="alert alert-secondary" role="alert" th:unless="${not #lists.isEmpty(unit.subUnits)}">
+            <h2>Изделие <span th:text="${unit.title} != null ? ${unit.title} : ${unit.description}"></span> не имеет
+                состава
+            </h2>
+        </div>
     </div>
 </section>
 </body>
