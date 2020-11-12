@@ -59,16 +59,20 @@ public class UnitController {
         Page<Unit> units = searchPattern == null ?
                 unitService.findAllPageable(PAGE_SIZE, currentPage - 1) :
                 unitService.findAllMatching(searchPattern, PAGE_SIZE, currentPage - 1);
-        model.addAttribute("units", units);
-        int totalPages = units.getTotalPages();
-        log.info("Got {} units from service, separated on {} pages", units.getTotalElements(), totalPages);
-        if (totalPages > 0) {
-            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-                    .boxed()
-                    .collect(Collectors.toList());
-            model.addAttribute("pageNumbers", pageNumbers);
+        if (units.getTotalElements() == 1) {
+            return getUnit(model, units.getContent().get(0).getId());
+        } else {
+            model.addAttribute("units", units);
+            int totalPages = units.getTotalPages();
+            log.info("Got {} units from service, separated on {} pages", units.getTotalElements(), totalPages);
+            if (totalPages > 0) {
+                List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                        .boxed()
+                        .collect(Collectors.toList());
+                model.addAttribute("pageNumbers", pageNumbers);
+            }
+            return "allUnits";
         }
-        return "allUnits";
     }
 
     @GetMapping("/{id}/exploding")
