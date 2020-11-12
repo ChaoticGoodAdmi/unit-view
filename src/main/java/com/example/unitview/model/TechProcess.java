@@ -24,7 +24,7 @@ public class TechProcess implements Comparable<TechProcess> {
     @Column(name = "title")
     private String title;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "variation")
     private TpVariation variation;
 

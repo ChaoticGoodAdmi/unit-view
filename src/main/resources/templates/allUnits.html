@@ -56,7 +56,12 @@
         ничего не найдено
     </h2>
 </div>
-
+<div class="container d-flex justify-content-center">
+    <span><strong>Найдено: &nbsp;</strong></span>
+    <span th:text="${units.getTotalElements()}"></span>
+    <span>&nbsp;ДСЕ. <strong>Страниц:</strong>&nbsp;</span>
+    <span th:text="${units.getTotalPages()}"></span>
+</div>
 <nav aria-label="Pagination" th:if="${units.totalPages gt 0}">
     <ul class="pagination justify-content-center font-weight-medium">
         <li class="page-item" th:classappend="${units.number eq 0} ? 'disabled'">

@@ -60,6 +60,7 @@ public class UnitController {
                 unitService.findAllPageable(PAGE_SIZE, currentPage - 1) :
                 unitService.findAllMatching(searchPattern, PAGE_SIZE, currentPage - 1);
         if (units.getTotalElements() == 1) {
+            log.info("Fount exactly 1 unit by search query: {}", query);
             return getUnit(model, units.getContent().get(0).getId());
         } else {
             model.addAttribute("units", units);

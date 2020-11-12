@@ -31,7 +31,7 @@ public class Unit {
     @Transient
     private List<Part> subUnits;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idgrdse")
     private UnitGroup group;
 
