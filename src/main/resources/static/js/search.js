@@ -2,7 +2,7 @@ let searchInput = document.getElementById("searchPattern");
 
 function search() {
     let searchPattern = searchInput.value;
-    let url = location.protocol + '//' + location.host + location.pathname;
+    let url = location.protocol + '//' + location.host + "/api/units/all";
     window.open(url + "?search=" + searchPattern, "_self");
 }
 
@@ -14,6 +14,7 @@ $(document).ready(function () {
     searchInput.focus();
     moveCursorToEnd(searchInput);
 })
+
 $(document).keypress(function (e) {
     if (e.which === 13) {
         $("#searchBtn").click();

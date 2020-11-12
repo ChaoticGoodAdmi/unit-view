@@ -115,4 +115,5 @@ body, html, #sidebar {
     max-width: max-content;
     background-color: black;
     padding-bottom: 10px;
+    margin-top: 10px;
 }
