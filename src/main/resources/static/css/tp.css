@@ -1,0 +1,13 @@
+.op-basic {
+
+}
+
+.op-optional {
+    color: black;
+    background-color: lightgrey;
+}
+
+.table-hover > tbody > tr.op-optional:hover > td {
+    background-color: inherit;
+    color: inherit;
+}
