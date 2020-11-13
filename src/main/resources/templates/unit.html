@@ -41,6 +41,10 @@
                 </li>
                 <hr>
                 <li>
+                    <a th:href="@{/api/units/{id}/(id=${unit.id})}">Список ТП</a>
+                </li>
+                <hr>
+                <li>
                     <a th:href="@{/api/units/{id}/composition(id=${unit.id})}">Первичная входимость</a>
                 </li>
                 <li>
@@ -81,7 +85,7 @@
                     </button>
                     <span id="copied-msg"></span>
                 </div>
-                <div class="container text-white bg-info rounded mt-lg-1 pt-1 pb-1">
+                <div th:if="${responsibleDept != null}" class="container text-white bg-info rounded mt-lg-1 pt-1 pb-1">
                     <span><strong>Ответственный участок:</strong> </span>
                     <span class="" th:text="${responsibleDept}"></span>
                 </div>
@@ -97,27 +101,10 @@
 <th:block th:replace="${scripts}"/>
 <script src="/js/scroll.js"></script>
 <script src="/js/search.js"></script>
+<script src="/js/copyToClipboard.js"></script>
 <script>
-    function copyToClipboard() {
-        const copyText = document.getElementById("art");
-        const textArea = document.createElement("textarea");
-        textArea.value = copyText.textContent;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand("Copy");
-        textArea.remove();
-        showCopiedMsg();
-    }
-
     function goBack() {
         window.history.back();
-    }
-
-    function showCopiedMsg() {
-        document.getElementById("copied-msg").innerHTML = "<span class='text-light'>Скопировано!</span>"
-        setTimeout(() => {
-            document.getElementById("copied-msg").innerHTML = "";
-        }, 2000);
     }
 </script>
 </html>
