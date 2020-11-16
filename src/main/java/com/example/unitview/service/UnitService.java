@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UnitService {
@@ -83,8 +84,9 @@ public class UnitService {
 
     @Cacheable("unitWithTp")
     public Unit findByIdWithTp(int id) {
-        return unitRepo.findByArticleWithTp(id + "/1")
-                .orElseThrow(() -> new IllegalArgumentException("Unit " + id + " not found in repo"));
+        Optional<Unit> unit = unitRepo.findByArticleWithTp(id + "/1");
+        return unit.isEmpty() ? unitRepo.findByArticleWithTp(id + "/5")
+                .orElseThrow(() -> new IllegalArgumentException("Unit " + id + " not found in repo")) : unit.get();
     }
 
     @Transactional
