@@ -28,6 +28,29 @@
         </div>
         <div class="container">
             <div th:each="techProc : ${unit.techProcesses}">
+                <div class="material-details d-none" th:id="mat + ${techProc.id}"
+                     th:each="norm : ${techProc.materialNorms}">
+                    <button class="btn btn-info mb-2" type="button"
+                            data-toggle="collapse" data-target="#collapseMat" aria-expanded="false"
+                            aria-controls="collapseMat">
+                        Материал
+                    </button>
+                    <div id="collapseMat" class="collapse">
+                        <div class="card m-1 mb-1">
+                            <strong>
+                                <div class="card-header bg-dark text-white" th:text="${norm.material.fullName}"></div>
+                            </strong>
+                            <div class="card-body">
+                                <p><strong class="text-info">Артикул: </strong><span
+                                        th:text="${norm.material.id}"></span></p>
+                                <p><strong class="text-info">Размер заготовки: </strong><span
+                                        th:text="${norm.moldSize} + ': ' + ${norm.moldSizeAddition}"></span></p>
+                                <p><strong class="text-info">Норма расхода: </strong><span
+                                        th:text="${norm.quantity} + ' ' + ${norm.material.measurementUnit.shortName}"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <table class="table table-sm table-hover tp-details d-none"
                        th:id="tp + ${techProc.id}">
                     <thead class="thead-dark ali">
@@ -53,9 +76,6 @@
     </div>
 </section>
 </body>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="/js/table.js"></script>
 <script src="/js/techproc.js"></script>
 </html>
