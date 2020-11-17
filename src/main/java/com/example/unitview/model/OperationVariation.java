@@ -1,5 +1,8 @@
 package com.example.unitview.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,6 +10,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tech_proc_oper_var")
+@Data
+@NoArgsConstructor
 public class OperationVariation {
 
     @Id
@@ -15,23 +20,4 @@ public class OperationVariation {
 
     @Column(name = "title")
     private String title;
-
-    public OperationVariation() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String type) {
-        this.title = type;
-    }
 }

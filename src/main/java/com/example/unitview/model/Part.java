@@ -1,5 +1,10 @@
 package com.example.unitview.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
 public class Part {
 
     private Unit unit;
@@ -7,25 +12,6 @@ public class Part {
 
     public Part(Unit unit, int quantity) {
         this.unit = unit;
-        this.quantity = quantity;
-    }
-
-    public Part() {
-    }
-
-    public Unit getUnit() {
-        return unit;
-    }
-
-    public void setUnit(Unit unit) {
-        this.unit = unit;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
