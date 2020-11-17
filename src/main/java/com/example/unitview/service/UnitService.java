@@ -135,4 +135,9 @@ public class UnitService {
             return "< не определено >";
         }
     }
+
+    @Cacheable("appliance")
+    public List<Unit> findParentUnits(Unit unit) {
+        return partRepo.findParentUnits(unit.getArticle());
+    }
 }

@@ -50,6 +50,16 @@ public class UnitController {
         return "unitComposition";
     }
 
+    @GetMapping("/{id}/exploding")
+    public String getComposition(Model model, @PathVariable("id") int id) {
+        Unit unit = unitService.findByIdWithSubUnits(id);
+        model.addAttribute("unit", unit);
+        Map<Unit, Integer> explodedComposition = unitService.explodeUnit(unit);
+        log.info("Decomposition finished with {} units", explodedComposition.values().size());
+        model.addAttribute("explodedComp", explodedComposition);
+        return "unitExploding";
+    }
+
     @GetMapping("/all")
     public String getAllUnits(Model model,
                               @RequestParam("page") Optional<Integer> pageNumber,
@@ -76,14 +86,15 @@ public class UnitController {
         }
     }
 
-    @GetMapping("/{id}/exploding")
-    public String getComposition(Model model, @PathVariable("id") int id) {
-        Unit unit = unitService.findByIdWithSubUnits(id);
+    @GetMapping("/{id}/appliance")
+    public String getParentUnits(Model model,
+                                 @PathVariable int id) {
+        Unit unit = unitService.findById(id);
+        unit.setParentUnits(unitService.findParentUnits(unit));
+        log.info("Found {} parent units of unit {}", unit.getParentUnits().size(), unit.getArticle());
         model.addAttribute("unit", unit);
-        Map<Unit, Integer> explodedComposition = unitService.explodeUnit(unit);
-        log.info("Decomposition finished with {} units", explodedComposition.values().size());
-        model.addAttribute("explodedComp", explodedComposition);
-        return "unitExploding";
+        model.addAttribute("parents", unit.getParentUnits());
+        return "unitAppliance";
     }
 
     @RequestMapping("/error")

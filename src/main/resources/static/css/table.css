@@ -8,3 +8,7 @@ tr.clickable-row { cursor: pointer; }
 .table-hover tbody tr:hover svg {
     fill: white;
 }
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}

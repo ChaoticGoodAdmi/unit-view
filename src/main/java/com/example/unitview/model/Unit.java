@@ -1,6 +1,8 @@
 package com.example.unitview.model;
 
 import com.example.unitview.util.UnitUtils;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -9,6 +11,8 @@ import java.util.List;
 @Entity
 @Table(name = "REFDSE")
 @Data
+@AllArgsConstructor
+@Builder(toBuilder = true)
 public class Unit {
 
     @Id
@@ -31,12 +35,19 @@ public class Unit {
     @Transient
     private List<Part> subUnits;
 
+    @Transient
+    private List<Unit> parentUnits;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idgrdse")
     private UnitGroup group;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "unit")
     private List<TechProcess> techProcesses;
+
+    public Unit() {
+
+    }
 
     public void setArticle(String article) {
         this.article = article;
