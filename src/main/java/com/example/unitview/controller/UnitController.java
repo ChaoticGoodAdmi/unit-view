@@ -1,5 +1,6 @@
 package com.example.unitview.controller;
 
+import com.example.unitview.model.Part;
 import com.example.unitview.model.TechProcess;
 import com.example.unitview.model.Unit;
 import com.example.unitview.service.UnitService;
@@ -43,21 +44,37 @@ public class UnitController {
     }
 
     @GetMapping("/{id}/composition")
-    public String getUnitWithSubUnits(Model model, @PathVariable int id) {
-        Unit unit = unitService.findByIdWithSubUnits(id);
-        log.info("Got unit: {} with {} sub-units", unit.toString(), unit.getSubUnits().size());
+    public String getUnitWithSubUnits(Model model,
+                                      @PathVariable int id,
+                                      @RequestParam("filter") Optional<String> query) {
+        String queryParam = query.orElse("").toLowerCase();
+        Unit unit = unitService.findByIdWithSubUnits(id, queryParam);
+        List<Part> subUnits = unit.getSubUnits();
+        log.info("Got unit: {} with {} sub-units", unit.toString(), subUnits.size());
         model.addAttribute("unit", unit);
         return "unitComposition";
     }
 
     @GetMapping("/{id}/exploding")
-    public String getComposition(Model model, @PathVariable("id") int id) {
-        Unit unit = unitService.findByIdWithSubUnits(id);
+    public String getComposition(Model model,
+                                 @PathVariable("id") int id) {
+        Unit unit = unitService.findByIdWithSubUnits(id, "");
         model.addAttribute("unit", unit);
         Map<Unit, Integer> explodedComposition = unitService.explodeUnit(unit);
         log.info("Decomposition finished with {} units", explodedComposition.values().size());
         model.addAttribute("explodedComp", explodedComposition);
         return "unitExploding";
+    }
+
+    @GetMapping("/{id}/appliance")
+    public String getParentUnits(Model model,
+                                 @PathVariable int id) {
+        Unit unit = unitService.findById(id);
+        unit.setParentUnits(unitService.findParentUnits(unit));
+        log.info("Found {} parent units of unit {}", unit.getParentUnits().size(), unit.getArticle());
+        model.addAttribute("unit", unit);
+        model.addAttribute("parents", unit.getParentUnits());
+        return "unitAppliance";
     }
 
     @GetMapping("/all")
@@ -84,17 +101,6 @@ public class UnitController {
             }
             return "allUnits";
         }
-    }
-
-    @GetMapping("/{id}/appliance")
-    public String getParentUnits(Model model,
-                                 @PathVariable int id) {
-        Unit unit = unitService.findById(id);
-        unit.setParentUnits(unitService.findParentUnits(unit));
-        log.info("Found {} parent units of unit {}", unit.getParentUnits().size(), unit.getArticle());
-        model.addAttribute("unit", unit);
-        model.addAttribute("parents", unit.getParentUnits());
-        return "unitAppliance";
     }
 
     @RequestMapping("/error")

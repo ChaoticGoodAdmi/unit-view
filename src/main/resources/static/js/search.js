@@ -1,4 +1,5 @@
 let searchInput = document.getElementById("searchPattern");
+let filterInput = document.getElementById("filterPattern");
 
 function search() {
     let searchPattern = searchInput.value;
@@ -15,9 +16,11 @@ $(document).ready(function () {
 })
 
 $(document).keypress(function (e) {
-    if (e.which === 13) {
-        $("#searchBtn").click();
-    }
+    const isSearchFocused = document.activeElement === searchInput;
+    const isFilterFocused = document.activeElement === filterInput;
+    if (e.which === 13)
+        if (isSearchFocused) $("#searchBtn").click();
+        else if (isFilterFocused) $("#filterBtn").click();
 });
 
 function moveCursorToEnd(el) {

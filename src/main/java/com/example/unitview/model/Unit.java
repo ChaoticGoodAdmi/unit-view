@@ -36,6 +36,9 @@ public class Unit {
     private List<Part> subUnits;
 
     @Transient
+    private List<Part> filteredSubUnits;
+
+    @Transient
     private List<Unit> parentUnits;
 
     @OneToOne(fetch = FetchType.LAZY)

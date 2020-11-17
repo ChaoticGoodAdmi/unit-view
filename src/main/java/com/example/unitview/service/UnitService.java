@@ -10,6 +10,7 @@ import com.example.unitview.util.TechProcUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UnitService {
@@ -69,17 +71,32 @@ public class UnitService {
     }
 
     @Cacheable("subUnits")
-    public Unit findByIdWithSubUnits(int id) {
+    public Unit findByIdWithSubUnits(int id, String queryParam) {
         log.info("Service is loading unit with sub-units by article {}", id);
         Unit unit = findById(id);
         log.info("Service has loaded unit: {}", unit.toString());
         List<Part> subUnits = partRepo.findSubUnits(unit.getArticle());
-        unit.setSubUnits(subUnits);
+        unit.setSubUnits("".equals(queryParam) ? subUnits : filterParts(subUnits, queryParam));
         return unit;
     }
 
     public Unit findByUnitWithSubUnits(Unit unit) {
-        return findByIdWithSubUnits(unit.getId());
+        return findByIdWithSubUnits(unit.getId(), "");
+    }
+
+    @CacheEvict("subUnits")
+    public List<Part> filterParts(List<Part> subUnits, String queryParam) {
+        List<String> parameters = List.of(queryParam.split("\\*"));
+        return subUnits.stream()
+                .filter(part -> {
+                    Unit unit = part.getUnit();
+                    String unitAsString = unit.getArticle() + " " +
+                            Optional.ofNullable(unit.getTitle()).orElse("").toLowerCase() + " " +
+                            unit.getDescription().toLowerCase() + " " +
+                            unit.getGroup().getTitle().toLowerCase();
+                    return parameters.stream().allMatch(unitAsString::contains);
+                })
+                .collect(Collectors.toList());
     }
 
     @Cacheable("unitWithTp")
