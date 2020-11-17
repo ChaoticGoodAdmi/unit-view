@@ -43,9 +43,11 @@
                             <div class="card-body">
                                 <p><strong class="text-info">Артикул: </strong><span
                                         th:text="${norm.material.id}"></span></p>
-                                <p><strong class="text-info">Размер заготовки: </strong><span
+                                <p th:if="${norm.dimensionSize} != null"><strong class="text-info">Габаритный размер: </strong><span
+                                        th:text="${norm.dimensionSize}"></span></p>
+                                <p th:if="${norm.moldSize} != null"><strong class="text-info">Размер заготовки: </strong><span
                                         th:text="${norm.moldSize}"></span></p>
-                                <p><strong class="text-info">Норма расхода: </strong><span
+                                <p th:if="${norm.quantity} != null"><strong class="text-info">Норма расхода: </strong><span
                                         th:text="${norm.quantity} + ' ' + ${norm.material.measurementUnit.shortName}"></span></p>
                             </div>
                         </div>
