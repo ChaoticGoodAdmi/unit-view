@@ -68,37 +68,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="/js/table.js"></script>
-<script>
-    $(document).ready(function () {
-        $('.clickable-row').each(function () {
-            let button = $(this).find('td').children().get(0);
-            button.addEventListener('click', function (ev) {
-                ev.stopPropagation();
-            }, true);
-        });
-    });
-
-    function copyTableRow(buttonId) {
-        let indexOfDelimiter = buttonId.indexOf('_');
-        let id = buttonId.substr(indexOfDelimiter + 1, buttonId.length - indexOfDelimiter);
-        let articleRow = document.getElementById('subArt_' + id);
-        const textArea = document.createElement("textarea");
-        textArea.value = articleRow.textContent;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand("Copy");
-        textArea.remove();
-        replaceWithMessage(articleRow);
-    }
-
-    function replaceWithMessage(articleRow) {
-        const original = articleRow.innerText;
-        articleRow.innerText = 'cкопировано';
-        articleRow.classList.add('font-italic');
-        setTimeout(() => {
-            articleRow.innerHTML = original;
-            articleRow.classList.remove('font-italic');
-        }, 500);
-    }
+<script src="/js/copyToClipboard.js">
 </script>
+<script>$(document).ready(function () {
+    $('.clickable-row').each(function () {
+        let button = $(this).find('td').children().get(0);
+        button.addEventListener('click', function (ev) {
+            ev.stopPropagation();
+        }, true);
+    });
+});</script>
 </html>

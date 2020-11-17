@@ -19,6 +19,7 @@
             <div class="table-responsive">
                 <table class="table table-sm table-hover table-striped">
                     <thead class="thead-dark">
+                    <th scope="col"></th>
                     <th scope="col">Артикул</th>
                     <th scope="col">Гравировка</th>
                     <th scope="col">Наименование</th>
@@ -29,7 +30,12 @@
                     <tbody>
                     <tr th:each="unitEntry : ${explodedComp}" th:classappend="${unitEntry.key.group.id != 6}? clickable-row : ''"
                         th:data-href="@{/api/units/{id}(id = ${unitEntry.key.id})}">
-                        <td th:text="${unitEntry.key.article}"></td>
+                        <td>
+                            <button class="btn btn-info btn-sm" type="button" th:id="copyBtn_ + ${unitEntry.key.id}"
+                                    onclick="copyTableRow(this.id)">к
+                            </button>
+                        </td>
+                        <td th:id="subArt_ + ${unitEntry.key.id}" th:text="${unitEntry.key.article}"></td>
                         <td th:text="${unitEntry.key.title}"></td>
                         <td th:text="${unitEntry.key.description}"></td>
                         <td th:text="${unitEntry.key.group.title}"></td>
@@ -57,4 +63,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="/js/table.js"></script>
+<script src="/js/copyToClipboard.js">
+</script>
+<script>$(document).ready(function () {
+    $('.clickable-row').each(function () {
+        let button = $(this).find('td').children().get(0);
+        button.addEventListener('click', function (ev) {
+            ev.stopPropagation();
+        }, true);
+    });
+});</script>
 </html>
