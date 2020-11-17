@@ -27,14 +27,14 @@ public class MaterialNorm {
     private String dimensionSize;
 
     @Column(name = "weight")
-    private float weight;
+    private Float weight;
 
     @Column(name = "mold_size")
     private String moldSize;
 
     @Column(name = "mold_size_num")
-    private int moldSizeAddition;
+    private Integer moldSizeAddition;
 
     @Column(name = "norm")
-    private float quantity;
+    private Float quantity;
 }

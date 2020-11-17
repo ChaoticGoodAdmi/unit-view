@@ -19,6 +19,7 @@
             <div class="table-responsive">
                 <table class="table table-sm table-hover table-striped">
                     <thead class="thead-dark">
+                    <th scope="col"></th>
                     <th scope="col">Артикул</th>
                     <th scope="col">Гравировка</th>
                     <th scope="col">Наименование</th>
@@ -27,14 +28,21 @@
                     <th class="text-center" scope="col">Состав</th>
                     </thead>
                     <tbody>
-                    <tr th:each="part : ${unit.subUnits}" th:classappend="${part.unit.group.id != 6}? clickable-row : ''"
+                    <tr th:each="part : ${unit.subUnits}"
+                        th:classappend="${part.unit.group.id != 6}? clickable-row : ''"
                         th:data-href="@{/api/units/{id}(id = ${part.unit.id})}">
-                        <td th:text="${part.unit.article}"></td>
+                        <td>
+                            <button class="btn btn-info btn-sm" type="button" th:id="copyBtn_ + ${part.unit.id}"
+                                    onclick="copyTableRow(this.id)">к
+                            </button>
+                        </td>
+                        <td th:id="subArt_ + ${part.unit.id}" th:text="${part.unit.article}"></td>
                         <td th:text="${part.unit.title}"></td>
                         <td th:text="${part.unit.description}"></td>
                         <td th:text="${part.unit.group.title}"></td>
                         <td class="text-center" th:text="${part.quantity}"></td>
-                        <td class="text-center"><a th:if="${part.unit.group.id != 6}" th:href="@{/api/units/{id}/composition(id = ${part.unit.id})}">
+                        <td class="text-center"><a th:if="${part.unit.group.id != 6}"
+                                                   th:href="@{/api/units/{id}/composition(id = ${part.unit.id})}">
                             <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-folder2-open"
                                  fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -60,4 +68,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 <script src="/js/table.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.clickable-row').each(function () {
+            let button = $(this).find('td').children().get(0);
+            button.addEventListener('click', function (ev) {
+                ev.stopPropagation();
+            }, true);
+        });
+    });
+
+    function copyTableRow(buttonId) {
+        let indexOfDelimiter = buttonId.indexOf('_');
+        let id = buttonId.substr(indexOfDelimiter + 1, buttonId.length - indexOfDelimiter);
+        let articleRow = document.getElementById('subArt_' + id);
+        const textArea = document.createElement("textarea");
+        textArea.value = articleRow.textContent;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("Copy");
+        textArea.remove();
+        replaceWithMessage(articleRow);
+    }
+
+    function replaceWithMessage(articleRow) {
+        const original = articleRow.innerText;
+        articleRow.innerText = 'cкопировано';
+        articleRow.classList.add('font-italic');
+        setTimeout(() => {
+            articleRow.innerHTML = original;
+            articleRow.classList.remove('font-italic');
+        }, 500);
+    }
+</script>
 </html>

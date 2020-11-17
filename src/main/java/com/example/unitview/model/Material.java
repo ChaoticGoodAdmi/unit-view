@@ -8,8 +8,6 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "material")
-/*@SecondaryTable(name = "measurement",
-        pkJoinColumns = @PrimaryKeyJoinColumn(name = "id"*//*, referencedColumnName = "measurement_id"*//*))*/
 @Data
 @NoArgsConstructor
 public class Material {
@@ -25,5 +23,4 @@ public class Material {
     @OneToOne
     @JoinColumn(name = "measurement_id")
     private MeasurementUnit measurementUnit;
-
 }

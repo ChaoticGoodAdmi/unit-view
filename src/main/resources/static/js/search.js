@@ -9,7 +9,6 @@ function search() {
 $(document).ready(function () {
     const url_string = window.location.href;
     const url = new URL(url_string);
-    console.log(url.searchParams.get("search"))
     searchInput.value = url.searchParams.get("search");
     searchInput.focus();
     moveCursorToEnd(searchInput);
