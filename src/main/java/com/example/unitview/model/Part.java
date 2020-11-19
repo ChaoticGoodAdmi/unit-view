@@ -3,23 +3,23 @@ package com.example.unitview.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "compositdse")
 @Data
 @NoArgsConstructor
 public class Part {
 
+    @Id
+    @GeneratedValue
+    private int id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "art_nr")
     private Unit unit;
+
+    @Column(name = "quantdse")
     private int quantity;
 
-    public Part(Unit unit, int quantity) {
-        this.unit = unit;
-        this.quantity = quantity;
-    }
-
-    @Override
-    public String toString() {
-        return "Part{" +
-                "unit=" + unit +
-                ", quantity=" + quantity +
-                '}';
-    }
 }

@@ -4,7 +4,6 @@ import com.example.unitview.model.Part;
 import com.example.unitview.model.TechOperation;
 import com.example.unitview.model.TechProcess;
 import com.example.unitview.model.Unit;
-import com.example.unitview.repo.PartRepository;
 import com.example.unitview.repo.UnitRepository;
 import com.example.unitview.util.TechProcUtils;
 import org.slf4j.Logger;
@@ -30,17 +29,26 @@ public class UnitService {
     private static final Logger log = LoggerFactory.getLogger(UnitService.class);
 
     private final UnitRepository unitRepo;
-    private final PartRepository partRepo;
+    //private final PartRepository partRepo;
 
     @Autowired
-    public UnitService(UnitRepository unitRepo, PartRepository partRepo) {
+    public UnitService(UnitRepository unitRepo/*, PartRepository partRepo*/) {
         this.unitRepo = unitRepo;
-        this.partRepo = partRepo;
+        //this.partRepo = partRepo;
     }
 
     @Cacheable("units")
     public Unit findById(int id) {
         return findByArticle(String.valueOf(id));
+    }
+
+    @Cacheable("subUnits")
+    public Unit findByIdWithSubUnitsFilter(int id, String queryParam) {
+        log.info("Service is loading unit with sub-units by article {}", id);
+        Unit unit = findByArticle(String.valueOf(id));
+        List<Part> subUnits = unit.getSubUnits();
+        unit.setSubUnits("".equals(queryParam) ? subUnits : filterParts(subUnits, queryParam));
+        return unit;
     }
 
     @Transactional
@@ -70,12 +78,12 @@ public class UnitService {
         return unitRepo.findBySearchPattern(searchPattern.toLowerCase().replace("*", "%"), pageable);
     }
 
-    @Cacheable("subUnits")
+    //@Cacheable("subUnits")
     public Unit findByIdWithSubUnits(int id, String queryParam) {
         log.info("Service is loading unit with sub-units by article {}", id);
         Unit unit = findById(id);
         log.info("Service has loaded unit: {}", unit.toString());
-        List<Part> subUnits = partRepo.findSubUnits(unit.getArticle());
+        List<Part> subUnits = unit.getSubUnits();
         unit.setSubUnits("".equals(queryParam) ? subUnits : filterParts(subUnits, queryParam));
         return unit;
     }
@@ -151,10 +159,5 @@ public class UnitService {
         } catch (NullPointerException npe) {
             return "< не определено >";
         }
-    }
-
-    @Cacheable("appliance")
-    public List<Unit> findParentUnits(Unit unit) {
-        return partRepo.findParentUnits(unit.getArticle());
     }
 }

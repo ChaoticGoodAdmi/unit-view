@@ -4,6 +4,9 @@ import com.example.unitview.util.UnitUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -32,24 +35,29 @@ public class Unit {
     @Column(name = "notes")
     private String notes;
 
-    @Transient
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_art_nr")
+    @OrderBy("id")
+    @BatchSize(size = 100)
     private List<Part> subUnits;
 
-    @Transient
-    private List<Part> filteredSubUnits;
-
-    @Transient
-    private List<Unit> parentUnits;
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "compositdse",
+            joinColumns = @JoinColumn(name = "art_nr", referencedColumnName = "art_nr"))
+    @OrderBy("title asc, description asc")
+    @BatchSize(size = 100)
+    private List<Unit> parent;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @Fetch(value = FetchMode.JOIN)
     @JoinColumn(name = "idgrdse")
     private UnitGroup group;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "unit")
+    @BatchSize(size = 100)
     private List<TechProcess> techProcesses;
 
     public Unit() {
-
     }
 
     public void setArticle(String article) {

@@ -10,7 +10,7 @@
 </head>
 <body>
 <section>
-    <div class="container" th:if="${not #lists.isEmpty(unit.parentUnits)}"><h3 class="container">
+    <div class="container" th:if="${not #lists.isEmpty(unit.parent)}"><h3 class="container">
         Применяемость изделия:
         <span th:text="${unit.title} != null ? ${unit.title} : ${unit.description}"></span>
         <span th:if="${unit.title != null}" th:text="${unit.description}"></span>
@@ -27,7 +27,7 @@
                     <th class="text-center" scope="col">Примен.</th>
                     </thead>
                     <tbody class="align-middle" >
-                    <tr th:each="parent : ${unit.parentUnits}"
+                    <tr th:each="parent : ${unit.parent}"
                         th:classappend="${parent.group.id != 6}? clickable-row : ''"
                         th:data-href="@{/api/units/{id}(id = ${parent.id})}">
                         <td>
@@ -54,7 +54,7 @@
         </div>
     </div>
     <div class="container">
-        <div class="alert alert-secondary" role="alert" th:unless="${not #lists.isEmpty(unit.parentUnits)}">
+        <div class="alert alert-secondary" role="alert" th:unless="${not #lists.isEmpty(unit.parent)}">
             <h2>Изделие <span th:text="${unit.title} != null ? ${unit.title} : ${unit.description}"></span> нигде не
                 применяется
             </h2>

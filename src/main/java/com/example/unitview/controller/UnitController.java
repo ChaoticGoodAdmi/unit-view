@@ -48,7 +48,7 @@ public class UnitController {
                                       @PathVariable int id,
                                       @RequestParam("filter") Optional<String> query) {
         String queryParam = query.orElse("").toLowerCase();
-        Unit unit = unitService.findByIdWithSubUnits(id, queryParam);
+        Unit unit = unitService.findByIdWithSubUnitsFilter(id, queryParam);
         List<Part> subUnits = unit.getSubUnits();
         log.info("Got unit: {} with {} sub-units", unit.toString(), subUnits.size());
         model.addAttribute("unit", unit);
@@ -58,7 +58,7 @@ public class UnitController {
     @GetMapping("/{id}/exploding")
     public String getComposition(Model model,
                                  @PathVariable("id") int id) {
-        Unit unit = unitService.findByIdWithSubUnits(id, "");
+        Unit unit = unitService.findByIdWithSubUnitsFilter(id, "");
         model.addAttribute("unit", unit);
         Map<Unit, Integer> explodedComposition = unitService.explodeUnit(unit);
         log.info("Decomposition finished with {} units", explodedComposition.values().size());
@@ -70,10 +70,10 @@ public class UnitController {
     public String getParentUnits(Model model,
                                  @PathVariable int id) {
         Unit unit = unitService.findById(id);
-        unit.setParentUnits(unitService.findParentUnits(unit));
-        log.info("Found {} parent units of unit {}", unit.getParentUnits().size(), unit.getArticle());
+        //unit.setParentUnits(unitService.findParentUnits(unit));
+        log.info("Found {} parent units of unit {}", unit.getParent().size(), unit.getArticle());
         model.addAttribute("unit", unit);
-        model.addAttribute("parents", unit.getParentUnits());
+        model.addAttribute("parents", unit.getParent());
         return "unitAppliance";
     }
 
